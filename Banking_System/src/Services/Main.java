@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
+
+import Models.Accounts;
 import Models.Users;
 
 public class Main {
@@ -11,6 +13,7 @@ public class Main {
 	static private final String username = "root";
 	static private final String password = "Rohit123";
 	static private Users user;
+	static private Accounts account;
 	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in); 
@@ -23,7 +26,10 @@ public class Main {
 		try {
 			Connection connection = DriverManager.getConnection(url, username, password);
 			UserManager userManager = new UserManager(connection, sc);
+			AccountManager accountManager = new AccountManager(connection, sc);
 			
+			while(user == null) {
+				
 			System.out.println("Welcome to Banking Management System");
 			System.out.println("----------------------------------------------");
 			System.out.println();
@@ -40,13 +46,21 @@ public class Main {
 				break;
 				default: System.out.println("Invalid choice! please choose valid choice");
 			}
-			
-			System.out.println("1. Delete account");
-			byte ch = sc.nextByte();
-			if(ch == 1) {
-				userManager.deleteUser();
 			}
 			
+			while(user != null) {
+				System.out.println("1. Delete account");
+				System.out.println("2. Create Bank Account");
+				byte ch = sc.nextByte();
+				switch(ch) {
+					case 1 : user = userManager.deleteUser();
+					return;
+					case 2 : account = accountManager.createBankAccount();
+					return;
+				}
+
+			}
+	
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}

@@ -124,7 +124,7 @@ public class UserManager {
 		}
 	}
 	
-	public void deleteUser() {
+	public Users deleteUser() {
 		try {
 			String query = "delete from users where email = ?";
 			PreparedStatement statement = connection.prepareStatement(query);
@@ -132,12 +132,16 @@ public class UserManager {
 			int rowsUpdated = statement.executeUpdate();
 			if(rowsUpdated > 0) {
 				System.out.println("User account deleted successfully!");
+				Users user = null;
+				return user;
 			} else {
 				System.out.println("Account Deletion failed ! Please try again!");
+				return this.user;
 			}
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
+			return this.user;
 		}
 	}
 }

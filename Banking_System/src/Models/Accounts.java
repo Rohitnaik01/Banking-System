@@ -6,33 +6,37 @@ public class Accounts {
 	private String holderEmail;
 	private String accountNumber;
 	private int securityPin;
+	private long balance;
 	
-	Accounts(String holderName, String holderEmail, int securityPin) {
+	public Accounts(String holderName, String holderEmail, int securityPin) {
 		this.holderName = holderName;
 		this.holderEmail = holderEmail;
 		this.securityPin = securityPin;
 	}
 	
-	String getHolderName() {
+	public String getHolderName() {
 		return holderName;
 	}
 	
-	String getHolderEmail() {
+	public String getHolderEmail() {
 		return holderEmail;
 	}
 	
-	int getSecurityPin() {
+	public int getSecurityPin() {
 		return securityPin;
 	}
 	
-	String getAccountNumber() {
+	public String getAccountNumber() {
 		return accountNumber;
 	}
 	
-	String generateAccountNumber() {
+	public long getBalance() {
+		return balance;
+	}
+	
+	public void generateAccountNumber() {
 		SecureRandom random = new SecureRandom();
 		String account_no = (1000000000L + random.nextLong(9000000000L)) + "";
 		this.accountNumber = account_no;
-		return accountNumber;
 	}
 }
