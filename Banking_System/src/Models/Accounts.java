@@ -6,12 +6,20 @@ public class Accounts {
 	private String holderEmail;
 	private String accountNumber;
 	private int securityPin;
-	private long balance;
+	private double balance;
 	
 	public Accounts(String holderName, String holderEmail, int securityPin) {
 		this.holderName = holderName;
 		this.holderEmail = holderEmail;
 		this.securityPin = securityPin;
+	}
+	
+	public Accounts(String holderName, String holderEmail, String accountNumber, int securityPin, double balance) {
+		this.holderName = holderName;
+		this.holderEmail = holderEmail;
+		this.accountNumber = accountNumber;
+		this.securityPin = securityPin;
+		this.balance = balance;
 	}
 	
 	public String getHolderName() {
@@ -30,7 +38,7 @@ public class Accounts {
 		return accountNumber;
 	}
 	
-	public long getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 	
@@ -39,4 +47,12 @@ public class Accounts {
 		String account_no = (1000000000L + random.nextLong(9000000000L)) + "";
 		this.accountNumber = account_no;
 	}
+
+	@Override
+	public String toString() {
+		return "Accounts [holderName=" + holderName + ", holderEmail=" + holderEmail + ", accountNumber="
+				+ accountNumber + ", securityPin=" + securityPin + ", balance=" + balance + "]";
+	}
+	
+	
 }

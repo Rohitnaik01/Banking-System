@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Models.Accounts;
@@ -20,16 +21,14 @@ public class AccountManager {
 		this.sc = sc;
 	}
 	
-	public Accounts createBankAccount() {
+	public Accounts createBankAccount(String email) {
 		sc.nextLine();
 		System.out.print("Enter your name: ");
 		String holderName = sc.nextLine();
-		System.out.print("Enter your email: ");
-		String holderEmail = sc.nextLine();
 		System.out.print("Create your Security Pin: ");
 		int securityPin = sc.nextInt();
 		
-		this.account = new Accounts(holderName, holderEmail, securityPin);
+		this.account = new Accounts(holderName, email, securityPin);
 		
 		this.account.generateAccountNumber();
 		
@@ -54,5 +53,56 @@ public class AccountManager {
 		
 		return this.account;
 	}
+	
+	
+	public Accounts selectAccount(String email) {
+		ArrayList<String> bankAccounts = new ArrayList<String>();
+		try {
+			String query = "select account_no from accounts where holder_email = ?;";
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, email);
+			ResultSet res = statement.executeQuery();
+			
+			while(res.next()) {
+				bankAccounts.add(res.getString("account_no"));
+			}
+			
+			if(!bankAccounts.isEmpty()) {
+				System.out.println("Your Bank Accounts:");
+				for(int i = 0; i < bankAccounts.size(); i++) {
+					System.out.println((i + 1) + ".  " + bankAccounts.get(i));
+				}
+				
+				System.out.println("Select Bank Account: ");
+				int choice = sc.nextInt();
+				
+				String accQuery = "select * from accounts where account_no = ?;";
+				PreparedStatement accStatement = connection.prepareStatement(accQuery);
+				accStatement.setString(1, bankAccounts.get(choice - 1));
+				ResultSet accRes = accStatement.executeQuery();
+			
+				while(accRes.next()) {
+					this.account = new Accounts(accRes.getString("holder_name"), accRes.getString("holder_email"), accRes.getString("account_no"), accRes.getInt("security_pin"), accRes.getDouble("balance"));
+				}
+				System.out.println(this.account.toString());
+				System.out.println();
+				
+				return this.account;
+			} else {
+				System.out.println("No Accounts created! Please create account first");
+				return null;
+			}
+			
+			
+			
+			
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
 	
 }
