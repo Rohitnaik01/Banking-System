@@ -108,6 +108,13 @@ public class AccountManager {
 		sc.nextLine();
 		System.out.println("Enter Amount:");
 		double amount = sc.nextDouble();
+		System.out.print("Enter Security Pin: ");
+		int pin = sc.nextInt();
+		
+		if(pin != this.account.getSecurityPin()) {
+			System.out.println("Incorrect Security Pin!");
+			return this.account;
+		}
 		String query = "update accounts set balance = ? where account_no = ?";
 		
 		try {

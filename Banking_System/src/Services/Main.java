@@ -57,8 +57,9 @@ public class Main {
 					System.out.println("1. Create Bank Account");
 					System.out.println("2. Select Bank Account");
 					System.out.println("3. Deposit Money");
-					System.out.println("4. Delete user account");
-					System.out.println("5. Log out");
+					System.out.println("4. Check Balance");
+					System.out.println("5. Delete user account");
+					System.out.println("6. Log out");
 					
 					int ch = sc.nextInt();
 					switch(ch) {
@@ -68,9 +69,11 @@ public class Main {
 						break;
 						case 3: account = accountManager.depositMoney(account.getAccountNumber());
 						break;
-						case 4 : user = userManager.deleteUser();
+						case 4: System.out.println("Balance : " + account.getBalance());
 						break;
-						case 5: System.out.println("Logging out!");
+						case 5 : user = userManager.deleteUser();
+						break;
+						case 6: System.out.println("Logging out!");
 								user = null;
 								account = null;
 						break innerloop;
