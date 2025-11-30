@@ -44,8 +44,10 @@ public class AccountManager {
 			if(rowsUpdated > 0) {
 				System.out.println("Bank account successfully created!! Here is your account number");
 				System.out.println(this.account.getAccountNumber());
+				connection.commit();
 			} else {
 				System.out.println("Bank account creation failed! Try again.");
+				connection.rollback();
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -56,6 +58,7 @@ public class AccountManager {
 	
 	
 	public Accounts selectAccount(String email) {
+		sc.nextLine();
 		ArrayList<String> bankAccounts = new ArrayList<String>();
 		try {
 			String query = "select account_no from accounts where holder_email = ?;";
@@ -94,14 +97,38 @@ public class AccountManager {
 			}
 			
 			
-			
-			
-			
 		} catch(SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
 		
+	}
+	
+	public Accounts depositMoney(String accountNo) {
+		sc.nextLine();
+		System.out.println("Enter Amount:");
+		double amount = sc.nextDouble();
+		String query = "update accounts set balance = ? where account_no = ?";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setDouble(1, amount);
+			statement.setString(2, accountNo);
+			
+			int rowsUpdated = statement.executeUpdate();
+			
+			if(rowsUpdated > 0) {
+				connection.commit();
+				System.out.println("Amount deposited successfully to account number: " + this.account.getAccountNumber());
+			} else {
+				connection.rollback();
+				System.out.println("Amount not deposited! Please try again");
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return this.account;
 	}
 	
 	

@@ -25,6 +25,7 @@ public class Main {
 		
 		try {
 			Connection connection = DriverManager.getConnection(url, username, password);
+			connection.setAutoCommit(false);
 			UserManager userManager = new UserManager(connection, sc);
 			AccountManager accountManager = new AccountManager(connection, sc);
 			
@@ -55,8 +56,9 @@ public class Main {
 				while(user != null) {
 					System.out.println("1. Create Bank Account");
 					System.out.println("2. Select Bank Account");
-					System.out.println("3. Delete user account");
-					System.out.println("4. Log out");
+					System.out.println("3. Deposit Money");
+					System.out.println("4. Delete user account");
+					System.out.println("5. Log out");
 					
 					int ch = sc.nextInt();
 					switch(ch) {
@@ -64,9 +66,11 @@ public class Main {
 						break;
 						case 2 : account = accountManager.selectAccount(user.getEmail());
 						break;
-						case 3 : user = userManager.deleteUser();
+						case 3: account = accountManager.depositMoney(account.getAccountNumber());
 						break;
-						case 4: System.out.println("Logging out!");
+						case 4 : user = userManager.deleteUser();
+						break;
+						case 5: System.out.println("Logging out!");
 								user = null;
 								account = null;
 						break innerloop;
