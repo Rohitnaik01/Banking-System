@@ -84,7 +84,7 @@ public class AccountManager {
 				accStatement.setString(1, bankAccounts.get(choice - 1));
 				ResultSet accRes = accStatement.executeQuery();
 			
-				while(accRes.next()) {
+				if(accRes.next()) {
 					this.account = new Accounts(accRes.getString("holder_name"), accRes.getString("holder_email"), accRes.getString("account_no"), accRes.getInt("security_pin"), accRes.getDouble("balance"));
 				}
 				System.out.println(this.account.toString());
@@ -127,6 +127,7 @@ public class AccountManager {
 			if(rowsUpdated > 0) {
 				connection.commit();
 				System.out.println("Amount deposited successfully to account number: " + this.account.getAccountNumber());
+				account.setBalance(amount + account.getBalance());
 			} else {
 				connection.rollback();
 				System.out.println("Amount not deposited! Please try again");
@@ -138,5 +139,61 @@ public class AccountManager {
 		return this.account;
 	}
 	
-	
+	public Accounts moneyTransfer() {
+		sc.nextLine();
+		System.out.println("Enter recipient account number:");
+		String rAccNo = sc.nextLine();
+		System.out.println("Enter amount to transfer: ");
+		double amount = sc.nextDouble();
+		System.out.println("Enter Security Pin:");
+		int secPin = sc.nextInt();
+		
+		if(secPin != account.getSecurityPin()) {
+			System.out.println("Invalid Security Pin!");
+			return account;
+		}
+		
+		try {
+			/*
+			 * String currBalQuery = "select balance from accounts where account_no = ?;";
+			 * PreparedStatement balStatement = connection.prepareStatement(currBalQuery);
+			 * balStatement.setString(1, account.getAccountNumber()); ResultSet balRes =
+			 * balStatement.executeQuery();
+			 * 
+			 * double balance = 0; if(balRes.next()) { balance =
+			 * balRes.getDouble("balance"); }
+			 */
+			
+			double balance = account.getBalance();
+			
+			if(balance >= amount) {
+				String sendQuery = "update accounts set balance = balance - ? where account_no = ?;";
+				PreparedStatement sendStatement = connection.prepareStatement(sendQuery);
+				sendStatement.setDouble(1, amount);
+				sendStatement.setString(2, account.getAccountNumber());
+				int sendRowsUpdated = sendStatement.executeUpdate();
+				
+				String recieveQuery = "update accounts set balance = balance + ? where account_no = ?;";
+				PreparedStatement recieveStatement = connection.prepareStatement(recieveQuery);
+				recieveStatement.setDouble(1, amount);
+				recieveStatement.setString(2, rAccNo);
+				int recieveRowsUpdated = recieveStatement.executeUpdate();
+				
+				if(sendRowsUpdated > 0 && recieveRowsUpdated > 0) {
+					connection.commit();
+					System.out.println("Amount transfered to Account no. " + rAccNo);
+					account.setBalance(account.getBalance() + amount);
+				} else {
+					connection.rollback();
+					System.out.println("Amount transfer failed!");
+				}		
+			} else {
+				System.out.println("Insufficient balance!");
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return account;
+	}
 }

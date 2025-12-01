@@ -22,6 +22,10 @@ public class Accounts {
 		this.balance = balance;
 	}
 	
+	public void setBalance(double amount) {
+		this.balance = amount;
+	}
+	
 	public String getHolderName() {
 		return holderName;
 	}
