@@ -11,7 +11,7 @@ import Models.Users;
 public class Main {
 	static private final String url = "jdbc:mysql://127.0.0.1:3306/bankdb";
 	static private final String username = "root";
-	static private final String password = "Rohit123";
+	static private final String password = "your_password";
 	static private Users user;
 	static private Accounts account;
 	
