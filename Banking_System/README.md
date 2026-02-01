@@ -86,7 +86,7 @@ CREATE TABLE accounts (
   balance DOUBLE DEFAULT 0
 );
 ```
-2️⃣ Update Database Credentials
+##2️⃣ Update Database Credentials
 
 Update the following in Main.java:
 
